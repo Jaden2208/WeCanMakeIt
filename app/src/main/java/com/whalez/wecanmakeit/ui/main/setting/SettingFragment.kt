@@ -67,7 +67,10 @@ class SettingFragment : Fragment() {
                              // Room DB 삭제
                              ViewModelProvider(this@SettingFragment)[TodoViewModel::class.java].deleteAll()
 
-                            // Firestore에서 사용자 정보 삭제
+                            // SharedPreference 사용자 정보 삭제
+                            UserSessionManager(mContext).removeUserDataFromSharedReference()
+
+                            // Firestore 사용자 정보 삭제
                             val kakaoId = UserSessionManager(mContext).currentID
                             if(kakaoId == null){
                                 Log.d("kkk", "SharedPreference에 있는 kakaoId 값이 null 임.")

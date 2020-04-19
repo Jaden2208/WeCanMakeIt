@@ -57,13 +57,13 @@ class UserSessionManager(context: Context) {
         editor.commit()
     }
 
-//    fun logout() {
-//        editor.clear()
-//        editor.commit()
+    fun removeUserDataFromSharedReference() {
+        editor.clear()
+        editor.commit()
 //        val i = Intent(context, LoginActivity::class.java)
 //        context.startActivity(i)
 //        (context as MainActivity).finish()
-//    }
+    }
 
 
 }
