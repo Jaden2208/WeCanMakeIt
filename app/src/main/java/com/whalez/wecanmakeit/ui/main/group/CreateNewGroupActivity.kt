@@ -3,10 +3,13 @@ package com.whalez.wecanmakeit.ui.main.group
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.whalez.wecanmakeit.R
 import com.whalez.wecanmakeit.UserSessionManager
+import com.whalez.wecanmakeit.firestore.FirestoreViewModel
+import com.whalez.wecanmakeit.firestore.Group
 import com.whalez.wecanmakeit.shortToast
 import kotlinx.android.synthetic.main.activity_create_new_group.*
 import java.util.*
@@ -17,14 +20,21 @@ class CreateNewGroupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_group)
 
+        val firestoreViewModel = ViewModelProvider(this)[FirestoreViewModel::class.java]
+
         btn_save.setOnClickListener {
+            val kakaoId = UserSessionManager(this).currentID!!
             val groupName = et_group_name.text.trim().toString()
             val groupType = et_group_type.text.trim().toString()
             if(groupName.isBlank() || groupType.isBlank()){
                 shortToast(this, "그룹 타입과 그룹 명 모두 입력해주세요.")
                 return@setOnClickListener
             }
-            createNewGroup(groupName, groupType)
+
+            val groupId = UUID.randomUUID().toString()
+            val group = Group(groupId, groupName, groupType, listOf(kakaoId))
+            firestoreViewModel.createNewGroupOnFirestore(kakaoId, group)
+            finish()
         }
 
     }

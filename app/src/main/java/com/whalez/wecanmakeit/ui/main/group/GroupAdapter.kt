@@ -1,5 +1,6 @@
 package com.whalez.wecanmakeit.ui.main.group
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import kotlinx.android.synthetic.main.my_group_item.view.*
 
 class GroupAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    val TAG = "kkk.GroupAdapter"
     companion object {
         const val TYPE_MY_GROUP = 0
         const val TYPE_SEARCHED_GROUP = 1
@@ -33,15 +35,25 @@ class GroupAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vi
     override fun getItemCount(): Int = groupList.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Log.d(TAG, "onBindViewHolder")
+        Log.d(TAG, "groupList size: $itemCount")
         val group = groupList[position]
         if (type == TYPE_MY_GROUP) {
             val mHolder = holder as MyGroupViewHolder
             mHolder.groupType.text = group.groupType
+            Log.d(TAG, group.groupType)
             mHolder.groupName.text = group.groupName
+            Log.d(TAG, group.groupName)
         } else {
 
         }
     }
+
+    fun setGroupList(groupList: List<Group>) {
+        this.groupList = groupList
+        notifyDataSetChanged()
+    }
+
 
     inner class MyGroupViewHolder(
         itemView: View

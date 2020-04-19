@@ -42,6 +42,6 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_my_group"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import androidx.lifecycle.ViewModelProvider
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.auth.ISessionCallback
 import com.kakao.auth.Session
@@ -14,6 +15,8 @@ import com.kakao.usermgmt.response.MeV2Response
 import com.kakao.util.exception.KakaoException
 import com.whalez.wecanmakeit.R
 import com.whalez.wecanmakeit.UserSessionManager
+import com.whalez.wecanmakeit.firestore.FirestoreViewModel
+import com.whalez.wecanmakeit.firestore.User
 import com.whalez.wecanmakeit.kakaoLogin
 import com.whalez.wecanmakeit.ui.main.MainActivity
 import java.util.*
@@ -23,6 +26,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var userNickname: String
     private lateinit var userProfileImgUrl: String
 
+    private lateinit var firestoreViewModel: FirestoreViewModel
+
     private val sessionCallback = object : ISessionCallback {
         override fun onSessionOpenFailed(exception: KakaoException?) {
             Log.d("kkk", "로그인 실패: ${exception.toString()}")
@@ -31,6 +36,7 @@ class LoginActivity : AppCompatActivity() {
         override fun onSessionOpened() {
             if (kakaoLogin == 0) {
                 saveUserInfoToFirestore()
+
                 kakaoLogin = 1
                 val intent = Intent(this@LoginActivity, MainActivity::class.java)
                 startActivity(intent)
@@ -42,6 +48,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        firestoreViewModel = ViewModelProvider(this)[FirestoreViewModel::class.java]
 
         // 세션 콜백 등록
         Session.getCurrentSession().addCallback(sessionCallback)
@@ -73,24 +81,27 @@ class LoginActivity : AppCompatActivity() {
                 val kakaoProfile = result.kakaoAccount.profile
                 userNickname = kakaoProfile.nickname
                 userProfileImgUrl = kakaoProfile.profileImageUrl
-                val firestore = FirebaseFirestore.getInstance()
+//                val firestore = FirebaseFirestore.getInstance()
 
-                val user = hashMapOf(
-                    "kakao_id" to kakaoId,
-                    "nickname" to userNickname,
-                    "profile_img_url" to userProfileImgUrl,
-                    "group" to emptyList<String>()
-                )
+//                val user = hashMapOf(
+//                    "kakao_id" to kakaoId,
+//                    "nickname" to userNickname,
+//                    "profile_img_url" to userProfileImgUrl,
+//                    "group" to emptyList<String>()
+//                )
+                val user = User(kakaoId, userNickname, userProfileImgUrl, emptyList<String>())
+
+                firestoreViewModel.saveUserToFirestore(user)
 
 
-                firestore.collection("users").document(kakaoId).set(user)
-                    .addOnSuccessListener {
-                        Log.d("kkk", "DocumentSnapshot saved")
-
-                    }
-                    .addOnFailureListener {
-                        Log.d("kkk", "fail to save user info")
-                    }
+//                firestore.collection("users").document(kakaoId).set(user)
+//                    .addOnSuccessListener {
+//                        Log.d("kkk", "DocumentSnapshot saved")
+//
+//                    }
+//                    .addOnFailureListener {
+//                        Log.d("kkk", "fail to save user info")
+//                    }
             }
 
             override fun onSessionClosed(errorResult: ErrorResult?) {

@@ -1,5 +1,6 @@
 package com.whalez.wecanmakeit.ui.main.home
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,6 +17,8 @@ import org.joda.time.DateTime
 
 class HomeFragment : Fragment() {
 
+    private lateinit var mContext: Context
+
     private lateinit var todoViewModel: TodoViewModel
     private lateinit var todoAdapter: TodoAdapter
 
@@ -27,6 +30,11 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        mContext = context
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         val year = DateTime().year
@@ -36,7 +44,7 @@ class HomeFragment : Fragment() {
 
         rv_home_todo.apply {
             todoAdapter = TodoAdapter(TodoAdapter.TYPE_ONLY_TODAY)
-            layoutManager = LinearLayoutManager(activity)
+            layoutManager = LinearLayoutManager(mContext)
             adapter = todoAdapter
             setHasFixedSize(true)
         }
