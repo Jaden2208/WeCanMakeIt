@@ -12,6 +12,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".ui.main.todo.EditTodoActivity"></activity>
+        <activity android:name=".ui.main.todo.AddTodoActivity" />
 
         <meta-data
             android:name="com.kakao.sdk.AppKey"

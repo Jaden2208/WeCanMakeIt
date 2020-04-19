@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "298986678551",
+    "firebase_url": "https://wecanmakeit-19296.firebaseio.com",
+    "project_id": "wecanmakeit-19296",
+    "storage_bucket": "wecanmakeit-19296.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:298986678551:android:d0a7fdc1bcff584c912f52",
+        "android_client_info": {
+          "package_name": "com.whalez.wecanmakeit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "298986678551-jf2uf10qqd9gf0prb0s3sudroap9ntof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpLtGy6zk8Zci-B5s44G8k0An2nRtRgiA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "298986678551-jf2uf10qqd9gf0prb0s3sudroap9ntof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

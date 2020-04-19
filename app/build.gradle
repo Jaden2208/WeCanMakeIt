@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -43,5 +45,30 @@ dependencies {
 
     // Kakao Login
     implementation group: project.KAKAO_SDK_GROUP, name: 'usermgmt', version: project.KAKAO_SDK_VERSION
+
+    // Firebase Firestore
+    implementation 'com.google.firebase:firebase-firestore:21.4.2'
+
+    // Room
+    implementation "androidx.room:room-runtime:${project.ROOM_VERSION}"
+    implementation "androidx.room:room-ktx:${project.ROOM_VERSION}"
+    kapt "androidx.room:room-compiler:${project.ROOM_VERSION}"
+
+    // Lifecycle
+    // ViewModel and LiveData
+    implementation "androidx.lifecycle:lifecycle-extensions:${project.LIFECYCLE_VERSION}"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:${project.LIFECYCLE_VERSION}"
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:${project.LIFECYCLE_VERSION}"
+
+    // Gson
+    implementation 'com.google.code.gson:gson:2.8.6'
+
+    // Joda-Time
+    // https://github.com/JodaOrg/joda-time
+    implementation 'joda-time:joda-time:2.10.5'
+
+    // PowerMenu
+    // https://github.com/skydoves/PowerMenu
+    implementation "com.github.skydoves:powermenu:2.1.2"
 
 }

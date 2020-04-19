@@ -46,7 +46,9 @@ class MainActivity : AppCompatActivity() {
     private fun checkUserLoginStatus(context: Context) {
         val userIsLoggedIn = Session.getCurrentSession().checkAndImplicitOpen()
         if (!userIsLoggedIn) goToLoginPage(context)
-        else return
+        else {
+            return
+        }
     }
 
     private fun showAnimation(v: View, i: ExpandableBottomBarMenuItem){
