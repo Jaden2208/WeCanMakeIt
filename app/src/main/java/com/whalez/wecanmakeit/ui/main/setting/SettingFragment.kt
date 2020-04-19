@@ -85,13 +85,16 @@ class SettingFragment : Fragment() {
     }
 
     private fun removeAllUserDataOnFirestore(){
-        val kakaoId = UserSessionManager(mContext).currentID
-        // SharedPreference 사용자 정보 삭제
-        UserSessionManager(mContext).removeUserDataFromSharedReference()
+        val userSessionManager = UserSessionManager(mContext)
+        val kakaoId = userSessionManager.currentID
         if (kakaoId == null) {
             Log.d("kkk", "SharedPreference에 있는 kakaoId 값이 null 임.")
             return
         }
+        // SharedPreference 사용자 정보 삭제
+        userSessionManager.removeUserDataFromSharedReference()
+
+        // firestore 사용자 정보 삭제 시작.
         val firestore = FirebaseFirestore.getInstance()
         val userFirestore = firestore.collection("users").document(kakaoId)
         userFirestore.get().addOnSuccessListener {

@@ -20,10 +20,11 @@ import kotlin.math.roundToInt
 
 class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    companion object{
+    companion object {
         const val TYPE_ONLY_TODAY = 0
         const val TYPE_ALL_TODO = 1
     }
+
     private var todoList: List<Todo> = ArrayList()
 
     private var isSelectedItem = SparseBooleanArray(0)
@@ -36,7 +37,7 @@ class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vie
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
         val inflater = LayoutInflater.from(parent.context)
-        if(type == TYPE_ALL_TODO) {
+        if (type == TYPE_ALL_TODO) {
             val view = inflater.inflate(R.layout.todo_item, parent, false)
             return TodoViewHolder(view)
         } else {
@@ -48,7 +49,7 @@ class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vie
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val todo = todoList[position]
         val dateTime = DateTime(todo.timestamp)
-        if(type == TYPE_ALL_TODO) {
+        if (type == TYPE_ALL_TODO) {
             val mHolder = holder as TodoViewHolder
             mHolder.yearMonth.text = dateTime.toString("yyyy.MM")
             mHolder.date.text = dateTime.toString("dd")

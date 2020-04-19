@@ -34,5 +34,7 @@ class GroupFragment : Fragment() {
             val intent = Intent(mContext, CreateNewGroupActivity::class.java)
             startActivity(intent)
         }
+
+        rv_my_group
     }
 }
