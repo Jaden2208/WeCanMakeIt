@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/home"
+        android:title="@string/icon_home"
+        app:exb_color="@color/color_home"
+        app:exb_icon="@drawable/default_home_icon" />
+
+    <item
+        android:id="@+id/todo"
+        android:title="@string/icon_schedule"
+        app:exb_color="@color/color_todo"
+        app:exb_icon="@drawable/default_schedule_icon" />
+
+    <item
+        android:id="@+id/group"
+        android:title="@string/icon_group"
+        app:exb_color="@color/color_group"
+        app:exb_icon="@drawable/default_group_icon" />
+
+    <item
+        android:id="@+id/setting"
+        android:title="@string/icon_setting"
+        app:exb_color="@color/color_setting"
+        app:exb_icon="@drawable/default_setting_icon" />
+</menu>

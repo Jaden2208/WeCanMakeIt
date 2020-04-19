@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">WeCanMakeIt</string>
+    <string name="kakao_native_app_key">90c6644c1f14d6c784d83df841efb186</string>
+
+    <!-- expandable bottom bar menus -->
+    <string name="icon_home">홈</string>
+    <string name="icon_schedule">할 일</string>
+    <string name="icon_group">그룹</string>
+    <string name="icon_setting">설정</string>
+</resources>
