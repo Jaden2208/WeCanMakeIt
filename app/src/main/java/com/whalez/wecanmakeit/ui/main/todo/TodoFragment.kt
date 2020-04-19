@@ -58,7 +58,7 @@ class TodoFragment : Fragment() {
 
         // 할 일 추가하기.
         btn_add.setOnClickListener {
-            val intent = Intent(activity, AddTodoActivity::class.java)
+            val intent = Intent(mContext, AddTodoActivity::class.java)
             startActivityForResult(intent, ADD_TODO_REQUEST)
         }
 

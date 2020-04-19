@@ -79,7 +79,7 @@ class LoginActivity : AppCompatActivity() {
                     "kakao_id" to kakaoId,
                     "nickname" to userNickname,
                     "profile_img_url" to userProfileImgUrl,
-                    "group" to ""
+                    "group" to emptyList<String>()
                 )
 
 

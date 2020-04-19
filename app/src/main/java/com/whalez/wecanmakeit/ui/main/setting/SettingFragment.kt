@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.kakao.network.ErrorResult
 import com.kakao.usermgmt.UserManagement
@@ -64,26 +65,12 @@ class SettingFragment : Fragment() {
                             kakaoLogin = 0
                             shortToast(mContext, "회원탈퇴되었습니다.")
 
-                             // Room DB 삭제
-                             ViewModelProvider(this@SettingFragment)[TodoViewModel::class.java].deleteAll()
-
-                            // SharedPreference 사용자 정보 삭제
-                            UserSessionManager(mContext).removeUserDataFromSharedReference()
+                            // Room DB 삭제
+                            ViewModelProvider(this@SettingFragment)[TodoViewModel::class.java].deleteAll()
 
                             // Firestore 사용자 정보 삭제
-                            val kakaoId = UserSessionManager(mContext).currentID
-                            if(kakaoId == null){
-                                Log.d("kkk", "SharedPreference에 있는 kakaoId 값이 null 임.")
-                                return@setPositiveButton
-                            }
-                            FirebaseFirestore.getInstance().collection("users").document(kakaoId)
-                                .delete()
-                                .addOnSuccessListener {
-                                    Log.d("kkk", "회원 정보 삭제 완료")
-                                }
-                                .addOnFailureListener {
-                                    Log.d("kkk", "회원 정보 삭제 실패 ${it.message}")
-                                }
+                            removeAllUserDataOnFirestore()
+
                             goToLoginPage(mContext)
                         }
                         .setNegativeButton("아니요") { _, _ -> }
@@ -94,6 +81,39 @@ class SettingFragment : Fragment() {
                     Log.d("kkk", "sessionClosed")
                 }
             })
+        }
+    }
+
+    private fun removeAllUserDataOnFirestore(){
+        val kakaoId = UserSessionManager(mContext).currentID
+        // SharedPreference 사용자 정보 삭제
+        UserSessionManager(mContext).removeUserDataFromSharedReference()
+        if (kakaoId == null) {
+            Log.d("kkk", "SharedPreference에 있는 kakaoId 값이 null 임.")
+            return
+        }
+        val firestore = FirebaseFirestore.getInstance()
+        val userFirestore = firestore.collection("users").document(kakaoId)
+        userFirestore.get().addOnSuccessListener {
+            val userGroupList = it.data!!["group"] as List<String>
+            val groupFirestore = firestore.collection("groups")
+            for (g in userGroupList) {
+                groupFirestore.document(g)
+                    .update("group_members", FieldValue.arrayRemove(kakaoId))
+                    .addOnSuccessListener {
+                        Log.d("kkk", "그룹에서 탈퇴한 회원은 삭제")
+                        userFirestore.delete()
+                            .addOnSuccessListener {
+                                Log.d("kkk", "회원 정보 삭제 완료")
+                            }
+                            .addOnFailureListener {
+                                Log.d("kkk", "회원 정보 삭제 실패 ${it.message}")
+                            }
+                    }
+                    .addOnFailureListener { e ->
+                        Log.d("kkk", "그룹에서 탈퇴한 회원 삭제 실패 : ${e.message}")
+                    }
+            }
         }
     }
 }
