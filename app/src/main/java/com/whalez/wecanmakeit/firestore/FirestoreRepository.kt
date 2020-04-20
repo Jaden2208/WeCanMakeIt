@@ -2,10 +2,7 @@ package com.whalez.wecanmakeit.firestore
 
 import android.content.Context
 import com.google.android.gms.tasks.Task
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.QuerySnapshot
+import com.google.firebase.firestore.*
 import com.whalez.wecanmakeit.UserSessionManager
 
 class FirestoreRepository {
@@ -39,6 +36,8 @@ class FirestoreRepository {
             doc.update("group_members", FieldValue.arrayUnion(kakaoId))
         }
     }
+
+    fun getUserGroups(kakaoId: String):Query = groupRef.whereArrayContains("groupMembers", kakaoId)
 
     fun getGroupInfo(groupId: String): Task<DocumentSnapshot> = groupRef.document(groupId).get()
 

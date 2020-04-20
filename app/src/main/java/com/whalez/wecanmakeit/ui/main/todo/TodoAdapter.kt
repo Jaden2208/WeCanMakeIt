@@ -2,6 +2,7 @@ package com.whalez.wecanmakeit.ui.main.todo
 
 import android.animation.ValueAnimator
 import android.content.Context
+import android.util.Log
 import android.util.SparseBooleanArray
 import android.view.LayoutInflater
 import android.view.View
@@ -20,6 +21,7 @@ import kotlin.math.roundToInt
 
 class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+    val TAG = "kkk.TodoAdapter"
     companion object {
         const val TYPE_ONLY_TODAY = 0
         const val TYPE_ALL_TODO = 1
@@ -36,7 +38,7 @@ class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vie
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         context = parent.context
-        val inflater = LayoutInflater.from(parent.context)
+        val inflater = LayoutInflater.from(context)
         if (type == TYPE_ALL_TODO) {
             val view = inflater.inflate(R.layout.todo_item, parent, false)
             return TodoViewHolder(view)
@@ -47,6 +49,7 @@ class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vie
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        Log.d(TAG, "onBindViewHolder")
         val todo = todoList[position]
         val dateTime = DateTime(todo.timestamp)
         if (type == TYPE_ALL_TODO) {

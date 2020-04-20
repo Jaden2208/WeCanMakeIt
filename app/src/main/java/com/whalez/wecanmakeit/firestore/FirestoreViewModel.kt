@@ -7,6 +7,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.whalez.wecanmakeit.shortToast
 import androidx.lifecycle.MutableLiveData
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.QuerySnapshot
 
 class FirestoreViewModel: ViewModel() {
 
@@ -22,47 +24,27 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
-    // get realtime updates from firebase regarding saved addresses
-//    fun getUserInfoFromFirestore(kakaoId: String): LiveData<List<User>> {
-//        firestoreRepository.getUserInfo(kakaoId)
-//            .addSnapshotListener(EventListener<QuerySnapshot> { value, e ->
-//                if (e != null) {
-//                    Log.w(TAG, "Listen failed.", e)
-//                    savedAddresses.value = null
-//                    return@EventListener
-//                }
-//
-//                var savedAddressList: MutableList<AddressItem> = mutableListOf()
-//                for (doc in value!!) {
-//                    var addressItem = doc.toObject(AddressItem::class.java)
-//                    savedAddressList.add(addressItem)
-//                }
-//                savedAddresses.value = savedAddressList
-//            })
-//
-//        return savedAddresses
-//    }
-
     fun getUserGroupListFromFirestore(kakaoId: String): LiveData<List<Group>> {
-        firestoreRepository.getUserInfo(kakaoId)
-            .addOnSuccessListener { it ->
-                val userGroupsId = it.data!!["group"] as List<String>
-                Log.d(TAG, "userGroupsId: ${userGroupsId[0]}")
-                val groupList: MutableList<Group> = mutableListOf()
-                for(groupId in userGroupsId){
-//                    Log.d(TAG, groupId)
-                    firestoreRepository.getGroupInfo(groupId).addOnSuccessListener { doc ->
-                        val group = doc.toObject(Group::class.java)!!
-                        Log.d(TAG, group.groupId)
-                        groupList.add(group)
-                    }
-
-                }
-                userGroups.value = groupList
+        firestoreRepository.getUserGroups(kakaoId).addSnapshotListener { value, e ->
+            if(e != null) {
+                Log.d(TAG, "listened failed : ${e.message}")
+                return@addSnapshotListener
             }
-            .addOnFailureListener {
-                Log.e(TAG, "get user's group list failed")
+            var groupList: MutableList<Group> = mutableListOf()
+            for(doc in value!!){
+                var groupItem = doc.toObject(Group::class.java)
+                groupList.add(groupItem)
             }
+            userGroups.value = groupList
+        }
+//            .addOnSuccessListener {
+//            var groupList: MutableList<Group> = mutableListOf()
+//            for(doc in it){
+//                var groupItem = doc.toObject(Group::class.java)
+//                groupList.add(groupItem)
+//            }
+//            userGroups.value = groupList
+//        }
         return userGroups
     }
 
@@ -80,13 +62,10 @@ class FirestoreViewModel: ViewModel() {
         }
     }
 
-    fun createNewGroupOnFirestore(kakaoId: String, group: Group) {
+    fun createNewGroupOnFirestore(group: Group) {
         firestoreRepository.createNewGroup(group)
             .addOnSuccessListener {
                 Log.d(TAG, "New group created")
-                firestoreRepository.updateUserGroup(kakaoId, group.groupId!!).addOnFailureListener {
-                    Log.e(TAG, "Failed to update user group")
-                }
             }
             .addOnFailureListener {
                 Log.e(TAG, "Failed to create new group")
