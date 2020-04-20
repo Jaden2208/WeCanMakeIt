@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.whalez.wecanmakeit.shortToast
 import androidx.lifecycle.MutableLiveData
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.QuerySnapshot
 
 class FirestoreViewModel: ViewModel() {
@@ -30,37 +31,43 @@ class FirestoreViewModel: ViewModel() {
                 Log.d(TAG, "listened failed : ${e.message}")
                 return@addSnapshotListener
             }
-            var groupList: MutableList<Group> = mutableListOf()
+            val groupList: MutableList<Group> = mutableListOf()
             for(doc in value!!){
-                var groupItem = doc.toObject(Group::class.java)
+                val groupItem = doc.toObject(Group::class.java)
                 groupList.add(groupItem)
             }
             userGroups.value = groupList
         }
-//            .addOnSuccessListener {
-//            var groupList: MutableList<Group> = mutableListOf()
-//            for(doc in it){
-//                var groupItem = doc.toObject(Group::class.java)
-//                groupList.add(groupItem)
-//            }
-//            userGroups.value = groupList
-//        }
         return userGroups
     }
 
 
     // delete an user from firestore
     fun deleteUserFromFirestore(kakaoId: String) {
-        firestoreRepository.deleteUser(kakaoId).addOnFailureListener {
+        firestoreRepository.deleteUser(kakaoId)
+            .addOnSuccessListener {
+                firestoreRepository.getUserGroups(kakaoId).addSnapshotListener { value, e ->
+                    for(doc in value!!){
+                        firestoreRepository.deleteUserFromGroup(kakaoId, doc["groupId"] as String)
+                            .addOnSuccessListener {
+                                Log.d(TAG, "그룹에서 탈퇴한 사용자 삭제 완료")
+                            }
+                            .addOnFailureListener {
+                                Log.e(TAG, "그룹에서 탈퇴한 사용자 삭제 실패: ${it.message}")
+                            }
+//                        Log.d(TAG, "groupName: ${doc["groupName"]}")
+                    }
+                }
+            }.addOnFailureListener {
             Log.e(TAG, "Failed to delete User")
         }
     }
 
-    fun updateGroupOnFirestore(groupId: String, kakaoId: String, type: Int) {
-        firestoreRepository.updateGroup(groupId, kakaoId, type).addOnFailureListener {
-            Log.e(TAG, "Failed to update group")
-        }
-    }
+//    fun updateGroupOnFirestore(groupId: String, kakaoId: String, type: Int) {
+//        firestoreRepository.updateGroup(groupId, kakaoId, type).addOnFailureListener {
+//            Log.e(TAG, "Failed to update group")
+//        }
+//    }
 
     fun createNewGroupOnFirestore(group: Group) {
         firestoreRepository.createNewGroup(group)

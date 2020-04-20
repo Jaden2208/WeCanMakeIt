@@ -20,8 +20,6 @@ class CreateNewGroupActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_new_group)
 
-        val firestoreViewModel = ViewModelProvider(this)[FirestoreViewModel::class.java]
-
         btn_save.setOnClickListener {
             val kakaoId = UserSessionManager(this).currentID!!
             val groupName = et_group_name.text.trim().toString()
@@ -40,39 +38,7 @@ class CreateNewGroupActivity : AppCompatActivity() {
             }
             setResult(RESULT_OK, intent)
             finish()
-
-//            val group = Group(groupId, groupName, groupType, listOf(kakaoId))
-//            firestoreViewModel.createNewGroupOnFirestore(kakaoId, group)
-//            finish()
         }
-
     }
-
-    private fun createNewGroup(groupName: String, groupType: String) {
-        val groupId = UUID.randomUUID().toString()
-        val userKakaoId = UserSessionManager(this).currentID.toString()
-        val group = hashMapOf(
-            "group_id" to groupId,
-            "group_name" to groupName,
-            "group_type" to groupType,
-            "group_members" to listOf(userKakaoId)
-        )
-        val firestore = FirebaseFirestore.getInstance()
-        firestore.collection("groups").document(groupId).set(group)
-            .addOnSuccessListener {
-                firestore.collection("users").document(userKakaoId)
-                    .update("group", FieldValue.arrayUnion(groupId))
-                    .addOnSuccessListener {
-                        shortToast(this, "새 그룹이 생성되었습니다.")
-                        finish()
-                    }.addOnFailureListener {
-                        Log.d("kkk", "사용자 그룹 엄데이트 실패: ${it.message}")
-                    }
-            }
-            .addOnFailureListener {
-                Log.d("kkk", "새 그룹 생성 실패 : ${it.message}")
-            }
-    }
-
 
 }

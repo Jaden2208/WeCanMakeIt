@@ -15,12 +15,15 @@ import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.LogoutResponseCallback
 import com.kakao.usermgmt.callback.UnLinkResponseCallback
 import com.whalez.wecanmakeit.*
+import com.whalez.wecanmakeit.firestore.FirestoreViewModel
 import com.whalez.wecanmakeit.ui.main.todo.TodoViewModel
 import kotlinx.android.synthetic.main.fragment_setting.*
 
 class SettingFragment : Fragment() {
 
     private lateinit var mContext: Context
+
+    private lateinit var firestoreViewModel: FirestoreViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,6 +40,8 @@ class SettingFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+
+        firestoreViewModel = ViewModelProvider(this)[FirestoreViewModel::class.java]
 
         btn_logout.setOnClickListener {
             UserManagement.getInstance().requestLogout(object : LogoutResponseCallback() {
@@ -95,28 +100,29 @@ class SettingFragment : Fragment() {
         userSessionManager.removeUserDataFromSharedReference()
 
         // firestore 사용자 정보 삭제 시작.
-        val firestore = FirebaseFirestore.getInstance()
-        val userFirestore = firestore.collection("users").document(kakaoId)
-        userFirestore.get().addOnSuccessListener {
-            val userGroupList = it.data!!["group"] as List<String>
-            val groupFirestore = firestore.collection("groups")
-            for (g in userGroupList) {
-                groupFirestore.document(g)
-                    .update("group_members", FieldValue.arrayRemove(kakaoId))
-                    .addOnSuccessListener {
-                        Log.d("kkk", "그룹에서 탈퇴한 회원은 삭제")
-                        userFirestore.delete()
-                            .addOnSuccessListener {
-                                Log.d("kkk", "회원 정보 삭제 완료")
-                            }
-                            .addOnFailureListener {
-                                Log.d("kkk", "회원 정보 삭제 실패 ${it.message}")
-                            }
-                    }
-                    .addOnFailureListener { e ->
-                        Log.d("kkk", "그룹에서 탈퇴한 회원 삭제 실패 : ${e.message}")
-                    }
-            }
-        }
+        firestoreViewModel.deleteUserFromFirestore(kakaoId)
+//        val firestore = FirebaseFirestore.getInstance()
+//        val userFirestore = firestore.collection("users").document(kakaoId)
+//        userFirestore.get().addOnSuccessListener {
+//            val userGroupList = it.data!!["group"] as List<String>
+//            val groupFirestore = firestore.collection("groups")
+//            for (g in userGroupList) {
+//                groupFirestore.document(g)
+//                    .update("group_members", FieldValue.arrayRemove(kakaoId))
+//                    .addOnSuccessListener {
+//                        Log.d("kkk", "그룹에서 탈퇴한 회원은 삭제")
+//                        userFirestore.delete()
+//                            .addOnSuccessListener {
+//                                Log.d("kkk", "회원 정보 삭제 완료")
+//                            }
+//                            .addOnFailureListener {
+//                                Log.d("kkk", "회원 정보 삭제 실패 ${it.message}")
+//                            }
+//                    }
+//                    .addOnFailureListener { e ->
+//                        Log.d("kkk", "그룹에서 탈퇴한 회원 삭제 실패 : ${e.message}")
+//                    }
+//            }
+//        }
     }
 }

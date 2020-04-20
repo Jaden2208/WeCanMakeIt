@@ -81,27 +81,9 @@ class LoginActivity : AppCompatActivity() {
                 val kakaoProfile = result.kakaoAccount.profile
                 userNickname = kakaoProfile.nickname
                 userProfileImgUrl = kakaoProfile.profileImageUrl
-//                val firestore = FirebaseFirestore.getInstance()
-
-//                val user = hashMapOf(
-//                    "kakao_id" to kakaoId,
-//                    "nickname" to userNickname,
-//                    "profile_img_url" to userProfileImgUrl,
-//                    "group" to emptyList<String>()
-//                )
-                val user = User(kakaoId, userNickname, userProfileImgUrl, emptyList<String>())
+                val user = User(kakaoId, userNickname, userProfileImgUrl)
 
                 firestoreViewModel.saveUserToFirestore(user)
-
-
-//                firestore.collection("users").document(kakaoId).set(user)
-//                    .addOnSuccessListener {
-//                        Log.d("kkk", "DocumentSnapshot saved")
-//
-//                    }
-//                    .addOnFailureListener {
-//                        Log.d("kkk", "fail to save user info")
-//                    }
             }
 
             override fun onSessionClosed(errorResult: ErrorResult?) {

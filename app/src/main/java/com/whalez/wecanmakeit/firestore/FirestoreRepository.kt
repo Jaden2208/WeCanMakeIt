@@ -8,16 +8,14 @@ import com.whalez.wecanmakeit.UserSessionManager
 class FirestoreRepository {
     private val TAG = "kkk.FirestoreRepository"
 
-    //  userSessionManager 써야되면 쓰자.
-    //    private val kakaoId = UserSessionManager(context).currentID!!
     private val firestoreDB = FirebaseFirestore.getInstance()
     private val userRef = firestoreDB.collection("users")
     private val groupRef = firestoreDB.collection("groups")
 
-    companion object {
-        const val TYPE_DELETE_ACCOUNT = 0
-        const val TYPE_GROUP_UPDATE = 1
-    }
+//    companion object {
+//        const val TYPE_DELETE_ACCOUNT = 0
+//        const val TYPE_GROUP_UPDATE = 1
+//    }
 
     fun createNewUser(user: User): Task<Void> = userRef.document(user.kakaoId).set(user)
 
@@ -25,24 +23,15 @@ class FirestoreRepository {
 
     fun deleteUser(kakaoId: String): Task<Void> = userRef.document(kakaoId).delete()
 
-    fun updateUserGroup(kakaoId: String, groupId: String): Task<Void>
-            = userRef.document(kakaoId).update("group", FieldValue.arrayUnion(groupId))
+    fun addUserInGroup(kakaoId: String, groupId: String): Task<Void> =
+        groupRef.document(groupId).update("groupMembers", FieldValue.arrayUnion(kakaoId))
 
-    fun updateGroup(groupId: String, kakaoId: String, type: Int): Task<Void> {
-        val doc = groupRef.document(groupId)
-        return if(type == TYPE_DELETE_ACCOUNT) {
-            doc.update("group_members", FieldValue.arrayRemove(kakaoId))
-        } else {
-            doc.update("group_members", FieldValue.arrayUnion(kakaoId))
-        }
-    }
+    fun deleteUserFromGroup(kakaoId: String, groupId: String): Task<Void> =
+        groupRef.document(groupId).update("groupMembers", FieldValue.arrayRemove(kakaoId))
 
-    fun getUserGroups(kakaoId: String):Query = groupRef.whereArrayContains("groupMembers", kakaoId)
+    fun getUserGroups(kakaoId: String): Query = groupRef.whereArrayContains("groupMembers", kakaoId)
 
-    fun getGroupInfo(groupId: String): Task<DocumentSnapshot> = groupRef.document(groupId).get()
-
-    fun createNewGroup(group: Group): Task<Void>
-            = groupRef.document(group.groupId).set(group)
+    fun createNewGroup(group: Group): Task<Void> = groupRef.document(group.groupId).set(group)
 
 
 }
