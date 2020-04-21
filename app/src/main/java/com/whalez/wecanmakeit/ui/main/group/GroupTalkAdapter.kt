@@ -59,7 +59,6 @@ class GroupTalkAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                         .into(mHolder.profileImg)
                     mHolder.name.text = userInfo.nickname
                 })
-
         mHolder.message.text = talk.message
     }
 

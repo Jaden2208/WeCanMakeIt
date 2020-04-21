@@ -3,6 +3,7 @@ package com.whalez.wecanmakeit.ui.main.group
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -27,6 +28,8 @@ class GroupRoomActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_group_room)
 
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
         val kakaoId = UserSessionManager(this).currentID!!
 
         val groupId = intent.getStringExtra(EXTRA_GROUP_ID)!!
@@ -36,10 +39,6 @@ class GroupRoomActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@GroupRoomActivity)
             adapter = groupTalkAdapter
             setHasFixedSize(true)
-
-            addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
-                rv_group_talk.scrollToPosition(this.adapter!!.itemCount -1)
-            }
         }
 
         firestoreViewModel = ViewModelProvider(this)[FirestoreViewModel::class.java]
@@ -48,7 +47,7 @@ class GroupRoomActivity : AppCompatActivity() {
                 tv_group_type.text = group.groupType
                 tv_group_name.text = group.groupName
 
-                var talkList: ArrayList<GroupTalk> = ArrayList()
+                val talkList: ArrayList<GroupTalk> = ArrayList()
                 for(talkJson in group.groupTalks){
                     val groupTalk = Gson().fromJson(talkJson, GroupTalk::class.java)
                     val timestamp = groupTalk.timestamp

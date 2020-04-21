@@ -12,7 +12,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.main.group.GroupRoomActivity"></activity>
+        <activity android:name=".ui.main.group.GroupRoomActivity"/>
         <activity android:name=".ui.main.group.CreateNewGroupActivity" />
         <activity android:name=".ui.main.todo.EditTodoActivity" />
         <activity android:name=".ui.main.todo.AddTodoActivity" />
