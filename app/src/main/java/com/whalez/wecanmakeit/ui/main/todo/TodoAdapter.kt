@@ -104,7 +104,7 @@ class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vie
 
             btnMore.setOnClickListener {
                 if (adapterPosition != RecyclerView.NO_POSITION) {
-                    listener.onItemClick(todoList[adapterPosition], it)
+                    listener.onMoreClick(todoList[adapterPosition], it)
                 }
             }
         }
@@ -181,10 +181,10 @@ class TodoAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vie
 
 
     interface OnMoreClickListener {
-        fun onItemClick(todo: Todo, view: View)
+        fun onMoreClick(todo: Todo, view: View)
     }
 
-    fun setOnItemClickListener(listener: OnMoreClickListener) {
+    fun setOnMoreClickListener(listener: OnMoreClickListener) {
         this.listener = listener
     }
 

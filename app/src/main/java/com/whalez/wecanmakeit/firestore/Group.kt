@@ -4,5 +4,6 @@ data class Group(
     val groupId: String = "",
     val groupName: String = "",
     val groupType: String = "",
-    val groupMembers: List<String> = emptyList()
+    val groupMembers: List<String> = emptyList(),
+    val groupTalks: List<String> = emptyList()
 )

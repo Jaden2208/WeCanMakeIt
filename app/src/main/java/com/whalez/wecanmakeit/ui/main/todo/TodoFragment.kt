@@ -63,8 +63,8 @@ class TodoFragment : Fragment() {
         }
 
         // More 버튼 클릭 시.
-        todoAdapter.setOnItemClickListener(object : TodoAdapter.OnMoreClickListener {
-            override fun onItemClick(todo: Todo, view: View) {
+        todoAdapter.setOnMoreClickListener(object : TodoAdapter.OnMoreClickListener {
+            override fun onMoreClick(todo: Todo, view: View) {
                 todoItemMenu!!.showAsDropDown(view)
             }
         })

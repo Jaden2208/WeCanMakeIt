@@ -71,4 +71,12 @@ dependencies {
     // https://github.com/skydoves/PowerMenu
     implementation "com.github.skydoves:powermenu:2.1.2"
 
+    // CircleImageView
+    // https://github.com/hdodenhof/CircleImageView
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+    // Glide
+    // https://github.com/bumptech/glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+
 }

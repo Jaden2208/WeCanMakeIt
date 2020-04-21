@@ -13,10 +13,13 @@ import kotlinx.android.synthetic.main.my_group_item.view.*
 class GroupAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val TAG = "kkk.GroupAdapter"
+
     companion object {
         const val TYPE_MY_GROUP = 0
         const val TYPE_SEARCHED_GROUP = 1
     }
+
+    private lateinit var listener: OnItemClickListener
 
     private var groupList: List<Group> = ArrayList()
 
@@ -61,12 +64,28 @@ class GroupAdapter(private val type: Int) : RecyclerView.Adapter<RecyclerView.Vi
         val groupType: TextView = itemView.tv_group_type
         val groupName: TextView = itemView.tv_group_name
 //        val groupRecentContent: TextView = itemView.tv_group_recent_content
+
+        init {
+            itemView.setOnClickListener {
+                if(adapterPosition != RecyclerView.NO_POSITION) {
+                    listener.onItemClick(groupList[adapterPosition], it)
+                }
+            }
+        }
     }
 
     inner class SearchedGroupViewHolder(
         itemView: View
     ) : RecyclerView.ViewHolder(itemView) {
 
+    }
+
+    interface OnItemClickListener {
+        fun onItemClick(group: Group, view: View)
+    }
+
+    fun setOnItemClickListener(listener: OnItemClickListener) {
+        this.listener = listener
     }
 
 }

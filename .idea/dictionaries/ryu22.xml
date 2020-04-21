@@ -2,6 +2,8 @@
   <dictionary name="ryu22">
     <words>
       <w>firestore</w>
+      <w>gson</w>
+      <w>joda</w>
       <w>kakao</w>
       <w>kakaoid</w>
       <w>todays</w>
