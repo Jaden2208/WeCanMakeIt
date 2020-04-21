@@ -13,19 +13,11 @@ class FirestoreRepository {
     private val userRef = firestoreDB.collection("users")
     private val groupRef = firestoreDB.collection("groups")
 
-//    companion object {
-//        const val TYPE_DELETE_ACCOUNT = 0
-//        const val TYPE_GROUP_UPDATE = 1
-//    }
-
     fun createNewUser(user: User): Task<Void> = userRef.document(user.kakaoId).set(user)
 
     fun getUserInfo(kakaoId: String): DocumentReference = userRef.document(kakaoId)
 
     fun deleteUser(kakaoId: String): Task<Void> = userRef.document(kakaoId).delete()
-
-    fun addUserInGroup(kakaoId: String, groupId: String): Task<Void> =
-        groupRef.document(groupId).update("groupMembers", FieldValue.arrayUnion(kakaoId))
 
     fun deleteUserFromGroup(kakaoId: String, groupId: String): Task<Void> =
         groupRef.document(groupId).update("groupMembers", FieldValue.arrayRemove(kakaoId))
