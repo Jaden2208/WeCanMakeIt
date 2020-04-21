@@ -5,40 +5,62 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.main.group.GroupRoomActivity">
-    
-    <RelativeLayout
-        android:id="@+id/group_info_layout"
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="60dp">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:contentInsetStart="0dp"
+        android:contentInsetLeft="0dp"
+        android:contentInsetEnd="0dp"
+        android:contentInsetRight="0dp"
+        app:contentInsetEnd="0dp"
+        app:contentInsetLeft="0dp"
+        app:contentInsetRight="0dp"
+        app:contentInsetStart="0dp">
 
-        <TextView
-            android:id="@+id/tv_group_type"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:textColor="@android:color/black"
-            android:layout_margin="4dp"
-            android:textSize="20sp"
-            android:text="TYPE"/>
+        <RelativeLayout
+            android:id="@+id/group_info_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60dp">
 
-        <TextView
-            android:id="@+id/tv_group_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NAME"
-            android:textSize="16sp"
-            android:layout_toEndOf="@+id/tv_group_type"
-            android:layout_margin="4dp"/>
+            <TextView
+                android:id="@+id/tv_group_type"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_margin="4dp"
+                android:text="TYPE"
+                android:textColor="@android:color/black"
+                android:textSize="20sp" />
 
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_group_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="4dp"
+                android:layout_toEndOf="@+id/tv_group_type"
+                android:text="NAME"
+                android:textSize="16sp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_group_talk"
+        </RelativeLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/group_info_layout"
-        android:layout_above="@+id/write_message_layout"
-        android:windowSoftInputMode="adjustResize"/>
+        android:layout_below="@+id/tool_bar"
+        android:layout_above="@+id/write_message_layout">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_group_talk"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
 
     <RelativeLayout
         android:id="@+id/write_message_layout"
@@ -50,20 +72,20 @@
             android:id="@+id/et_message"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="3dp"
             android:layout_toStartOf="@+id/btn_send"
-            android:background="@android:drawable/editbox_background"
-            android:layout_margin="3dp"/>
+            android:background="@android:drawable/editbox_background" />
 
         <TextView
             android:id="@+id/btn_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:text="전송"
             android:layout_centerVertical="true"
-            android:textSize="18sp"
+            android:padding="3dp"
+            android:text="전송"
             android:textColor="@android:color/black"
-            android:padding="3dp"/>
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

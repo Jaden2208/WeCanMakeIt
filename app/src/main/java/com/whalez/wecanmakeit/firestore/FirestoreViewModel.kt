@@ -21,6 +21,7 @@ class FirestoreViewModel : ViewModel() {
 
     //    var savedAddresses: MutableLiveData<List<AddressItem>> = MutableLiveData()
     private var currentGroupInfo: MutableLiveData<Group> = MutableLiveData()
+    private var groupTalks: MutableLiveData<List<GroupTalk>> = MutableLiveData()
 
     // save user to firebase
     fun saveUserToFirestore(user: User) {
@@ -43,6 +44,22 @@ class FirestoreViewModel : ViewModel() {
             userGroups.value = groupList
         }
         return userGroups
+    }
+
+    fun getGroupTalkFromFirestore(groupId: String): LiveData<List<GroupTalk>> {
+        firestoreRepository.getGroupTalk(groupId).addSnapshotListener { value, e ->
+            if (e != null) {
+                Log.d(TAG, "Failed to get user group talk : ${e.message}")
+                return@addSnapshotListener
+            }
+            val talkList: MutableList<GroupTalk> = mutableListOf()
+            for(doc in value!!){
+                val talkItem = doc.toObject(GroupTalk::class.java)
+                talkList.add(talkItem)
+            }
+            groupTalks.value = talkList
+        }
+        return groupTalks
     }
 
     fun getUserInfoFromFirestore(kakaoId: String): LiveData<User> {
@@ -110,14 +127,18 @@ class FirestoreViewModel : ViewModel() {
             }
     }
 
-    fun addTalkOnGroupInFirestore(groupId: String, talk: GroupTalk, writtenMessage: EditText) {
-        firestoreRepository.addTalk(groupId, talk)
-            .addOnSuccessListener {
-                writtenMessage.text.clear()
-            }
+    fun addTalkOnGroupInFirestore(groupId: String, talk: GroupTalk) {
+        firestoreRepository.addTalk2(groupId, talk)
             .addOnFailureListener {
                 Log.e(TAG, "Failed to add talk")
             }
+//        firestoreRepository.addTalk(groupId, talk)
+//            .addOnSuccessListener {
+//                writtenMessage.text.clear()
+//            }
+//            .addOnFailureListener {
+//                Log.e(TAG, "Failed to add talk")
+//            }
     }
 
 
