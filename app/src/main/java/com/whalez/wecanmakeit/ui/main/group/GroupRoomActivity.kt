@@ -36,6 +36,10 @@ class GroupRoomActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@GroupRoomActivity)
             adapter = groupTalkAdapter
             setHasFixedSize(true)
+
+            addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+                rv_group_talk.scrollToPosition(this.adapter!!.itemCount -1)
+            }
         }
 
         firestoreViewModel = ViewModelProvider(this)[FirestoreViewModel::class.java]
@@ -46,22 +50,22 @@ class GroupRoomActivity : AppCompatActivity() {
 
                 var talkList: ArrayList<GroupTalk> = ArrayList()
                 for(talkJson in group.groupTalks){
-                    val groupTalk = Gson().fromJson<GroupTalk>(talkJson, GroupTalk::class.java)
+                    val groupTalk = Gson().fromJson(talkJson, GroupTalk::class.java)
                     val timestamp = groupTalk.timestamp
                     val userId = groupTalk.userId
                     val message = groupTalk.message
-                    Log.d(TAG, "message: $message")
                     val talkItem = GroupTalk(timestamp, userId, message)
                     talkList.add(talkItem)
                 }
                 groupTalkAdapter.setTalkList(talkList)
+                rv_group_talk.smoothScrollToPosition(talkList.size-1)
 
             })
 
         btn_send.setOnClickListener {
             val message = et_message.text.toString()
             val talk = GroupTalk(DateTime().millis, kakaoId, message)
-            firestoreViewModel.addTalkOnGroupInFirestore(groupId, talk)
+            firestoreViewModel.addTalkOnGroupInFirestore(groupId, talk, et_message)
         }
 
 

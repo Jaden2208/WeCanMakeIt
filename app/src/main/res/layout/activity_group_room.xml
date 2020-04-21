@@ -37,7 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/group_info_layout"
-        android:layout_above="@+id/write_message_layout"/>
+        android:layout_above="@+id/write_message_layout"
+        android:windowSoftInputMode="adjustResize"/>
 
     <RelativeLayout
         android:id="@+id/write_message_layout"
