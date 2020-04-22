@@ -26,25 +26,18 @@ class FirestoreRepository {
     fun getUserGroups(kakaoId: String): Query = groupRef.whereArrayContains("groupMembers", kakaoId)
 
     fun createNewGroup(group: Group): Task<Void> = groupRef.document(group.groupId).set(group)
-    
-//    fun createNewGroupToom(groupId: String): Task<Void> = groupRoomRef.collection(groupId)
 
-    fun addTalk2(groupId: String, talk: GroupTalk): Task<Void> {
+    fun addTalk(groupId: String, talk: GroupTalk): Task<Void> {
         return groupRoomRef.collection(groupId).document(talk.timestamp.toString()).set(talk)
     }
 
     fun getGroupTalk(groupId: String): Query {
-        // 여기 limit 말고 다른거롤 바꿔줘야 됨.
-        return groupRoomRef.collection(groupId).limit(10)
+        // 여기서 Pagination 구현해야됨.
+        return groupRoomRef.collection(groupId)
+//            .limit(20)
     }
 
     fun getGroupInfo(groupId: String): DocumentReference = groupRef.document(groupId)
-
-//    fun addTalk(groupId: String, talk: GroupTalk): Task<Void> {
-//        val groupTalk = GroupTalk(talk.timestamp, talk.userId, talk.message)
-//        val groupTalkJson = Gson().toJson(groupTalk)
-//        return groupRef.document(groupId).update("groupTalks", FieldValue.arrayUnion(groupTalkJson))
-//    }
 
 
 }

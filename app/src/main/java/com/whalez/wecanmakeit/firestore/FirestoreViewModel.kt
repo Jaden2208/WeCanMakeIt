@@ -1,16 +1,9 @@
 package com.whalez.wecanmakeit.firestore
 
-import android.app.Application
-import android.content.Context
 import android.util.Log
-import android.widget.EditText
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
-import com.whalez.wecanmakeit.shortToast
 import androidx.lifecycle.MutableLiveData
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FieldValue
-import com.google.firebase.firestore.QuerySnapshot
 
 class FirestoreViewModel : ViewModel() {
 
@@ -128,7 +121,7 @@ class FirestoreViewModel : ViewModel() {
     }
 
     fun addTalkOnGroupInFirestore(groupId: String, talk: GroupTalk) {
-        firestoreRepository.addTalk2(groupId, talk)
+        firestoreRepository.addTalk(groupId, talk)
             .addOnFailureListener {
                 Log.e(TAG, "Failed to add talk")
             }

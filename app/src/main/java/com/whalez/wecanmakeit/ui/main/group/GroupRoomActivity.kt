@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.whalez.wecanmakeit.EXTRA_GROUP_ID
 import com.whalez.wecanmakeit.R
 import com.whalez.wecanmakeit.UserSessionManager
@@ -35,13 +36,9 @@ class GroupRoomActivity : AppCompatActivity() {
         rv_group_talk.apply {
             groupTalkAdapter = GroupTalkAdapter()
             layoutManager = LinearLayoutManager(this@GroupRoomActivity)
-            (layoutManager as LinearLayoutManager).stackFromEnd = true
+//            (layoutManager as LinearLayoutManager).stackFromEnd = true
             adapter = groupTalkAdapter
             addOnLayoutChangeListener { v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom ->
-                Log.d(TAG, "oldTop: $oldTop")
-                Log.d(TAG, "top: $top")
-                Log.d(TAG, "oldBottom: $oldBottom")
-                Log.d(TAG, "bottom: $bottom")
                 if(oldBottom == bottom) return@addOnLayoutChangeListener
                 val adapterSize = rv_group_talk.adapter!!.itemCount
                 if(adapterSize > 0) rv_group_talk.smoothScrollToPosition(adapterSize - 1)
@@ -53,20 +50,6 @@ class GroupRoomActivity : AppCompatActivity() {
             Observer { group ->
                 tv_group_type.text = group.groupType
                 tv_group_name.text = group.groupName
-
-//                val talkList: ArrayList<GroupTalk> = ArrayList()
-                // 여기에 그룹 룸 가져올수 있도록
-//                for(talkJson in group.groupTalks){
-//                    val groupTalk = Gson().fromJson(talkJson, GroupTalk::class.java)
-//                    val timestamp = groupTalk.timestamp
-//                    val userId = groupTalk.userId
-//                    val message = groupTalk.message
-//                    val talkItem = GroupTalk(timestamp, userId, message)
-//                    talkList.add(talkItem)
-//                }
-//                groupTalkAdapter.setTalkList(talkList)
-//                if (talkList.size > 0) rv_group_talk.smoothScrollToPosition(talkList.size - 1)
-
             })
 
         firestoreViewModel.getGroupTalkFromFirestore(groupId).observe(this,
@@ -74,6 +57,32 @@ class GroupRoomActivity : AppCompatActivity() {
                 groupTalkAdapter.setTalkList(groupTalk)
                 if (groupTalk.isNotEmpty()) rv_group_talk.smoothScrollToPosition(groupTalk.size - 1)
             })
+
+        rv_group_talk.addOnScrollListener(object : RecyclerView.OnScrollListener(){
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val linearLayoutManager =
+                    rv_group_talk.layoutManager as LinearLayoutManager?
+                val firstVisibleItemPosition =
+                    linearLayoutManager!!.findFirstVisibleItemPosition()
+                val visibleItemCount = linearLayoutManager.childCount
+                val totalItemCount = linearLayoutManager.itemCount
+
+                Log.d(TAG, "firstVisibleItemPosition: $firstVisibleItemPosition")
+                Log.d(TAG, "visibleItemCount: $visibleItemCount")
+                Log.d(TAG, "totalItemCount: $totalItemCount")
+
+                if(firstVisibleItemPosition == 0){
+
+                }
+            }
+
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                super.onScrollStateChanged(recyclerView, newState)
+
+            }
+        })
 
         btn_send.setOnClickListener {
             val message = et_message.text.toString().trim()
